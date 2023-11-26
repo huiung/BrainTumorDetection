@@ -37,6 +37,10 @@ composeCompiler = "1.5.3"
 #coil
 coil = "2.4.0"
 
+#tflite
+tensorflowLiteGpu = "2.3.0"
+tensorflowLite ="0.1.0"
+
 [libraries]
 
 # androidX
@@ -87,6 +91,11 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 
 #coil
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+
+#tflite
+tensorflow-lite-gpu = { module = "org.tensorflow:tensorflow-lite-gpu", version.ref = "tensorflowLiteGpu" }
+tensorflow-lite-support = { module = "org.tensorflow:tensorflow-lite-support", version.ref = "tensorflowLite" }
+tensorflow-lite-metadata = { module = "org.tensorflow:tensorflow-lite-metadata", version.ref = "tensorflowLite" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }

@@ -20,28 +20,6 @@ import java.io.File
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    companion object {
-        const val ARG_URI = "ARG_URI"
-    }
-//
-//    private val permissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
-//        if (isGranted) {
-//            takeImage()
-//        }
-//    }
-//
-//    private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
-//
-//        if (isSuccess) {
-//            latestTmpUri?.let { uri ->
-//                val intent = Intent(baseContext, InspectActivity::class.java)
-//                intent.putExtra(ARG_URI, uri)
-//                startActivity(intent)
-//            }
-//        }
-//    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -57,39 +35,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-
-//    private fun takeImage() {
-//        lifecycleScope.launchWhenStarted {
-//            getTmpFileUri().let { uri ->
-//                latestTmpUri = uri
-//                cameraLauncher.launch(uri)
-//            }
-//        }
-//    }
-
-//    private fun getTmpFileUri(): Uri {
-//        val tmpFile = File.createTempFile("tmp_image_file", ".png", cacheDir).apply {
-//            createNewFile()
-//            deleteOnExit()
-//        }
-//
-//        return FileProvider.getUriForFile(applicationContext, "${BuildConfig.APPLICATION_ID}.provider", tmpFile)
-//    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BrainTumorDetectionTheme {
-        Greeting("Android")
     }
 }

@@ -1,6 +1,7 @@
 package com.dreamfactory.brain_tumor_detection.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -61,18 +62,21 @@ fun MainNavGraph(
                 }
             }
         }
-//
-//        composable(
-//            route = MainDestinations.INSPECT_SCREEN
-//        ) { backStackEntry ->
-//            // Creates a ViewModel from the current BackStackEntry
-//            // Available in the androidx.hilt:hilt-navigation-compose artifact
-//            val vm = hiltViewModel<InspectViewModel>()
-//            InspectScreen(vm, navController) {
-//                if (!navController.popBackStack()) {
-//                    finishActivity()
-//                }
-//            }
-//        }
+
+        composable(
+            route = MainDestinations.INSPECT_SCREEN
+        ) { backStackEntry ->
+            // Creates a ViewModel from the current BackStackEntry
+            // Available in the androidx.hilt:hilt-navigation-compose artifact
+            val parentEntry = remember(backStackEntry) {
+                navController.getBackStackEntry(MainDestinations.MAIN_SCREEN)
+            }
+            val vm = hiltViewModel<MainViewModel>(parentEntry)
+            InspectRoute(vm, navController) {
+                if (!navController.popBackStack()) {
+                    finishActivity()
+                }
+            }
+        }
     }
 }

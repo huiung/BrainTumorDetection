@@ -1,5 +1,6 @@
 package com.dreamfactory.brain_tumor_detection.ui
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -24,6 +25,8 @@ import javax.inject.Inject
 class MainViewModel @Inject constructor(
 
 ): ViewModel() {
+
+    var imageUri: Uri? = null
 
     //get image from gallery or camera
     init {

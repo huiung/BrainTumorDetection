@@ -1,5 +1,12 @@
 package com.dreamfactory.brain_tumor_detection.ui
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -33,8 +41,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.checkSelfPermission
+import androidx.core.content.FileProvider
 import androidx.navigation.NavController
 import com.dreamfactory.brain_tumor_detection.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
 
 /*
  * Designed and developed by 2023 huiung
@@ -102,6 +116,34 @@ fun MainScreen(
     navController: NavController,
     onBackPressed: () -> Unit
 ) {
+    val context = LocalContext.current
+    val lifecycleScope = rememberCoroutineScope()
+
+    val cameraLauncher =
+        rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { isSuccess ->
+            if (isSuccess) {
+                navController.navigate(MainDestinations.INSPECT_SCREEN)
+            }
+        }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+    ) { isGranted ->
+        if (isGranted) {
+            lifecycleScope.launch {
+                takeImage(context, vm, cameraLauncher)
+            }
+        }
+    }
+
+    val galleryLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+
+        uri ?: return@rememberLauncherForActivityResult
+        vm.imageUri = uri
+        navController.navigate(MainDestinations.INSPECT_SCREEN)
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -131,7 +173,10 @@ fun MainScreen(
                 contentDescription = ""
             )
         }
-        Text(text = stringResource(id = R.string.railroad_inspection), style = MaterialTheme.typography.titleMedium)
+        Text(
+            text = stringResource(id = R.string.brain_tumor_detection),
+            style = MaterialTheme.typography.titleMedium
+        )
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -143,7 +188,19 @@ fun MainScreen(
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(1f),
-                onClick = { /*TODO*/ }
+                onClick = {
+                    if (checkSelfPermission(
+                            context,
+                            Manifest.permission.CAMERA
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        lifecycleScope.launch {
+                            takeImage(context, vm, cameraLauncher)
+                        }
+                    } else {
+                        permissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                }
             ) {
                 Text(
                     text = stringResource(id = R.string.camera),
@@ -155,7 +212,9 @@ fun MainScreen(
                 modifier = Modifier
                     .fillMaxHeight()
                     .weight(1f),
-                onClick = { /*TODO*/ }
+                onClick = {
+                    galleryLauncher.launch("image/*")
+                }
             ) {
                 Text(
                     text = stringResource(id = R.string.gallery),
@@ -175,5 +234,31 @@ fun MainScreenPreview() {
         vm = MainViewModel(),
         navController = NavController(LocalContext.current),
         onBackPressed = {}
+    )
+}
+
+private suspend fun takeImage(
+    context: Context,
+    vm: MainViewModel,
+    cameraLauncher: ActivityResultLauncher<Uri>
+) {
+    vm.imageUri = getTempFileUri(context)
+    vm.imageUri?.let { uri ->
+        cameraLauncher.launch(uri)
+    }
+}
+
+private suspend fun getTempFileUri(context: Context): Uri {
+    val tmpFile = withContext(Dispatchers.IO) {
+        File.createTempFile("tmp_image_file", ".png", context.cacheDir)
+    }.apply {
+        createNewFile()
+        deleteOnExit()
+    }
+
+    return FileProvider.getUriForFile(
+        context.applicationContext,
+        "${context.packageName}.provider",
+        tmpFile
     )
 }

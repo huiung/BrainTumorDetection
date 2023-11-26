@@ -50,18 +50,17 @@ fun MainNavGraph(
             }
         }
 
-//        composable(
-//            route = MainDestinations.INFO_SCREEN
-//        ) { backStackEntry ->
-//            // Creates a ViewModel from the current BackStackEntry
-//            // Available in the androidx.hilt:hilt-navigation-compose artifact
-//            val vm = hiltViewModel<InfoViewModel>()
-//            InfoScreen(vm, navController) {
-//                if (!navController.popBackStack()) {
-//                    finishActivity()
-//                }
-//            }
-//        }
+        composable(
+            route = MainDestinations.INFO_SCREEN
+        ) { backStackEntry ->
+            // Creates a ViewModel from the current BackStackEntry
+            // Available in the androidx.hilt:hilt-navigation-compose artifact
+            InfoRoute(navController) {
+                if (!navController.popBackStack()) {
+                    finishActivity()
+                }
+            }
+        }
 //
 //        composable(
 //            route = MainDestinations.INSPECT_SCREEN

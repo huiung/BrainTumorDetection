@@ -3,6 +3,10 @@ package com.dreamfactory.brain_tumor_detection.ui
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 /*
@@ -28,8 +32,16 @@ class MainViewModel @Inject constructor(
 
     var imageUri: Uri? = null
 
+    private val _result: MutableStateFlow<String> = MutableStateFlow("")
+
     //get image from gallery or camera
     init {
 
+    }
+
+    fun getCurrentTime(): String {
+        val currentDateTime = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault())
+        return formatter.format(currentDateTime)
     }
 }

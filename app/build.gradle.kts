@@ -68,6 +68,7 @@ dependencies {
     //compose
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose)
+    implementation(libs.shreyaspatil.captureable)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test)

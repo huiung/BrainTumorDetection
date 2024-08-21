@@ -207,7 +207,7 @@ fun InspectScreen(
                     }
 
                     Text(
-                        text = result.value.first,
+                        text = if (result.value.second) result.value.first else "",
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
@@ -327,7 +327,7 @@ private fun classifyImage(
                 // Releases model resources if no longer used.
                 model.close()
                 val indexKey = Utils.classIndexKey[retIdx]
-                result.value = "$indexKey / ${vm.getCurrentTime()}" to (retIdx == confidences.lastIndex || retIdx == confidences.lastIndex - 1)
+                result.value = "$indexKey / ${vm.getCurrentTime()}" to (confidences.max() > 0.9f)
             }
         } catch (e: IOException) {
             // handle exception

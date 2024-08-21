@@ -83,25 +83,6 @@ fun MainRoute(
                 title = {
                     Text(stringResource(id = R.string.app_name))
                 },
-                actions = {
-                    IconButton(
-                        onClick = { }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_alarm),
-                            contentDescription = ""
-                        )
-                    }
-                    IconButton(
-                        modifier = Modifier.padding(end = 10.dp),
-                        onClick = { }
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.ic_user),
-                            contentDescription = ""
-                        )
-                    }
-                }
             )
         }
     ) { innerPadding ->
